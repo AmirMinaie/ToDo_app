@@ -6,10 +6,7 @@ export const Add_ToDo = (title, dateCreate, timEstimate, parent) => {
         title,
         dateCreate,
         timEstimate,
-        parent
-
-
-        
+        parent        
     }
 }
 export const Delete_ToDo = (id) => {
