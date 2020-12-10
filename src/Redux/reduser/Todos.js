@@ -54,8 +54,8 @@ const findWithAttr = (array, attr, value) => {
 export const Todos = (state = row, action) => {
     switch (action.type) {
         case "Add_ToDo":
-            // console.log('[reuser]', state, action)
-            if (action.parent === 'null') {
+            console.log('[reuser]', state, action)
+            if (action.parent === null) {
                 return [
                     ...state,
                     {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { makeStyles } from '@material-ui/core/styles';
@@ -17,17 +17,23 @@ const useStyles = makeStyles({
 export default function DropDown(Props) {
   const classes = useStyles();
   const { list, onChangeAuto } = Props;
+  console.log("props Autoc", Props)
+  const [value, setValue] = useState(Props.value)
   return (
     <Autocomplete
       id="Parent"
+      noOptionsText=""
+      value={value}
       style={{ width: 300, margin: "20px" }}
       options={list}
       classes={{ option: classes.option, }}
       autoHighlight
-      getOptionLabel={(option) => option.title}
-      onChange={(e, option) => onChangeAuto(option)}
+      getOptionLabel={option => option.title}
+
+      cle
+      onChange={(e, option) => {onChangeAuto(option); setValue(option) }}
       renderOption={(option) =>
-        (<div style={{pading:"20px"}}>
+        (<div style={{ pading: "20px" }}>
           {option.title}
         </div>)
       }

@@ -28,7 +28,10 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: '#64b5f6'
     },
     Button: {
-        margin: '20px',
+        marginTop: '23px',
+        marginBottom: '23px',
+        marginRight: '23px',
+        width: '150px'
 
     },
     TextField: {
@@ -53,8 +56,8 @@ const useStyles = makeStyles((theme) => ({
 function Forms(props) {
     const classes = useStyles();
     const [formData, setFormData] = useState({
-        title: props.title != undefined ? props.title : "",
-        parent: props.parent != undefined ? props.parent : "null",
+        title: props.title != undefined ? props.title : null,
+        parent: props.parent != undefined ? props.parent : null,
     })
 
     let onChangeInpute = e => {
@@ -64,22 +67,37 @@ function Forms(props) {
             title: e.target.value,
         }))
     }
+
     let onChangeAuto = option => {
         console.log("[onChangeAuto]", option)
         setFormData((state) => ({
             title: state.title,
-            parent: option != null ? option.id : "null"
+            parent: option
         }))
     }
 
+    let clear = (e) => {
+        setFormData(() => ({
+            title: "",
+            parent: null
+        }))
+    }
+
+    let OnClickSubmit = (event) => {
+        console.log(" OnClickSubmit")
+        props.dispatch(Add_ToDo(formData.title, "1222", 12, formData.parent))
+    
+    }
+
     return (
-        <>
             <form >
                 <Grid container className={classes.grid} spacing={2}>
                     <Grid item xs={12}>
                         <Grid container spacing={3}>
                             <Grid>
                                 <TextField
+                                    value={formData.title ?? ""}
+                                    type="title"
                                     className={classes.TextField}
                                     id="outlined-basic"
                                     label={<>عنوان <span style={{ color: 'red' }}>*</span></>}
@@ -87,16 +105,16 @@ function Forms(props) {
                                     onChange={onChangeInpute} />
                             </Grid>
                             <Grid>
-                                <DropDown list={props.Todos} onChangeAuto={onChangeAuto} />
+                                <DropDown value={formData.parent} list={props.Todos} onChangeAuto={onChangeAuto} />
                             </Grid>
-                            <Button className={classes.Button} variant="contained" color="primary" onClick={(event) => { props.dispatch(Add_ToDo(formData.title, "1222", 12, formData.parent)) }}>اضافه کردن</Button>
+                            <Button className={classes.Button} size='large' variant="contained" color="primary" onClick={OnClickSubmit}>اضافه کردن</Button>
+                            <Button className={classes.Button} size='large' variant="contained" color="inherit" onClick={clear}>لغو</Button>
 
                         </Grid>
                     </Grid>
                 </Grid>
 
             </form>
-        </>
     );
 }
 

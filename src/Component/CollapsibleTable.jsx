@@ -19,18 +19,20 @@ import { borders } from '@material-ui/system';
 import { withStyles } from '@material-ui/styles';
 import { connect } from 'react-redux'
 import DeleteIcon from '@material-ui/icons/Delete'
-import {Delete_ToDo} from './../Redux/actions'
+import { Delete_ToDo } from './../Redux/actions'
+import Dialog from './Dialog'
 
 
 
 function Row(props) {
   const { row, classes } = props;
   const [open, setOpen] = React.useState(false);
-  console.log("[Row]", props);
+
   const onClickDelete = (id) => {
-    console.log("onclockDelete", id)
-    props.dispatch(Delete_ToDo(id))
+    console.log("onclickDelete", id)
+    props.DeleteRow(id)
   }
+
   return (
     <React.Fragment>
       <TableRow className={classes.tableRowSecend}>
@@ -86,54 +88,81 @@ function Row(props) {
 }
 
 class CollapsibleTable extends Component {
-  constructor(props) {
-    super(props);
-    console.log("[Table] constractore", props);
+
+  state = {
+    openDialogConferm: false,
+  }
+  DeleteRowId = -1;
+
+  DeleteRow = (id) => {
+    this.setState({ ...this.state, openDialogConferm: true })
+    this.DeleteRowId = id;
+  }
+
+  rezalteDialog = (rezalte) => {
+    switch (rezalte) {
+      case "Agree":
+        console.log("props Table",this.props)
+        this.props.dispatch(Delete_ToDo(this.DeleteRowId))
+        this.DeleteRowId = -1;
+        this.setState(() => {
+          return {
+            openDialogConferm: false
+          }
+        })
+
+        break
+      case "Disagree":
+        this.DeleteRowId = -1;
+        this.setState(() => {
+          return {
+            openDialogConferm: false
+          }
+        })
+        break
+
+    }
   }
 
   render() {
     const { classes } = this.props;
-
     let rowsTable;
-    // try {
-    console.log("render Table", this.props.Todos);
-    rowsTable = this.props.Todos.map((row) => (<Row classes={classes} key={row.id} dispatch={this.props.dispatch} row={row} />));
+    rowsTable = this.props.Todos.map((row) => (<Row classes={classes} key={row.id} DeleteRow={this.DeleteRow.bind(this)} row={row} />));
 
-    // }
-    // catch (e) {
-    // rowsTable = <Row classes={classes} key={0} row={createData("", "", "",)} />;
-    // }
-    console.log('rowTable', rowsTable);
     return (
-      <TableContainer component={Paper}>
-        <Table aria-label="customized table">
-          <colgroup>
-            <col style={{ width: '50%' }} />
-            <col style={{ width: '22%' }} />
-            <col style={{ width: '22%' }} />
-            <col style={{ width: '2%' }} />
-            <col style={{ width: '2%' }} />
-            <col style={{ width: '2%' }} />
-            <col style={{ width: '2%' }} />
-          </colgroup>
-          <TableHead className={classes.headFrist}>
-            <TableRow className={classes.tableRowFrist}>
-              <TableCell align="left" hideSortIcon='true' >عنوان</TableCell>
-              <TableCell align="left">تاریخ ایجاد</TableCell>
-              <TableCell align="left">مدت زمان</TableCell>
-              <TableCell align="center"></TableCell>
-              <TableCell size="small" />
-              <TableCell size="small" />
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rowsTable}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <>
+        <TableContainer component={Paper}>
+          <Table aria-label="customized table">
+            <colgroup>
+              <col style={{ width: '50%' }} />
+              <col style={{ width: '22%' }} />
+              <col style={{ width: '22%' }} />
+              <col style={{ width: '2%' }} />
+              <col style={{ width: '2%' }} />
+              <col style={{ width: '2%' }} />
+              <col style={{ width: '2%' }} />
+            </colgroup>
+            <TableHead className={classes.headFrist}>
+              <TableRow className={classes.tableRowFrist}>
+                <TableCell align="left" hideSortIcon='true' >عنوان</TableCell>
+                <TableCell align="left">تاریخ ایجاد</TableCell>
+                <TableCell align="left">مدت زمان</TableCell>
+                <TableCell align="center"></TableCell>
+                <TableCell size="small" />
+                <TableCell size="small" />
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rowsTable}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <Dialog open={this.state.openDialogConferm} dialogRezalte={this.rezalteDialog.bind(this)} />
+      </>
     );
   }
 }
+
 const style = theme => ({
   headFrist: {
     backgroundColor: "#66BB6A",

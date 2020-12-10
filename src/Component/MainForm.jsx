@@ -40,7 +40,6 @@ const useStyles = theme => ({
     }
 });
 
-
 class MainForm extends React.Component {
 
     state = {
