@@ -29,8 +29,6 @@ export default function DropDown(Props) {
       classes={{ option: classes.option, }}
       autoHighlight
       getOptionLabel={option => option.title}
-
-      cle
       onChange={(e, option) => {onChangeAuto(option); setValue(option) }}
       renderOption={(option) =>
         (<div style={{ pading: "20px" }}>

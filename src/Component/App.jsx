@@ -4,6 +4,7 @@ import HeaderAppBar from './HeaderAppBar';
 import MainForm from './MainForm';
 import RTL from './RTL';
 import { makeStyles } from '@material-ui/core/styles';
+import axios from 'axios'
 
 
 
@@ -20,7 +21,7 @@ const useStyle = makeStyles((them) => ({
 
 
 export default function App() {
-
+    axios.defaults.baseURL= "https://todoapp-80ddc-default-rtdb.firebaseio.com/"
     const classs = useStyle();
 
     return (
