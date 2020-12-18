@@ -11,14 +11,17 @@ import Menu from '@material-ui/core/Menu';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
-
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import PropTypes from 'prop-types';
+import { NavLink } from 'react-router-dom'
 import CssBaseline from '@material-ui/core/CssBaseline';
 import useScrollTrigger from '@material-ui/core/useScrollTrigger';
 import Box from '@material-ui/core/Box';
+import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
+import InfoIcon from '@material-ui/icons/Info';
+import Firebase from '../../../Firebase'
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -114,6 +117,15 @@ function CAppBar() {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  const handleLogOutClick = (event) => {
+    Firebase.logOut()
+    console.log("handleLogOutClick")
+  }
+
+  const handleToDoClick = (event) => {
+    console.log("handleToDoClick")
+  }
+
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
     <Menu
@@ -143,9 +155,11 @@ function CAppBar() {
       onClose={handleMobileMenuClose}
     >
       <MenuItem>
-        <IconButton className={classes.menuItem} aria-label="show 4 new mails" color="inherit">
+        <IconButton onClick={handleToDoClick} aria-label="" color="inherit">
           <Badge badgeContent={4} color="secondary">
-            <MailIcon />
+            <NavLink to='/Home/ToDos'>
+              <AssignmentTurnedInIcon />
+            </NavLink>
           </Badge>
         </IconButton>
         <p className={classes.menuItem}>پیغام</p>
@@ -158,6 +172,14 @@ function CAppBar() {
         </IconButton>
         <p className={classes.menuItem}>اعلان</p>
       </MenuItem>
+      <MenuItem>
+        <IconButton
+          onClick={handleLogOutClick}
+          color="inherit">
+          <ExitToAppIcon />
+        </IconButton>
+        <p className={classes.menuItem}>خروج</p>
+      </MenuItem>
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
           aria-label="account of current user"
@@ -167,7 +189,7 @@ function CAppBar() {
         >
           <AccountCircle />
         </IconButton>
-        <p className={classes.menuItem}>پروفایل</p>
+        <p className={classes.menuItem}></p>
       </MenuItem>
     </Menu>
   );
@@ -180,8 +202,7 @@ function CAppBar() {
             edge="start"
             className={classes.menuButton}
             color="inherit"
-            aria-label="open drawer"
-          >
+            aria-label="open drawer">
             <MenuIcon />
           </IconButton>
           <Typography className={classes.title} variant="h6" noWrap>
@@ -202,16 +223,23 @@ function CAppBar() {
           </div>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <IconButton aria-label="show 4 new mails" color="inherit">
+
+            <IconButton
+              href='/'
+              onClick={handleToDoClick} aria-label="show 4 new mails" color="inherit">
               <Badge badgeContent={4} color="secondary">
-                <MailIcon />
+                <NavLink to='/Home/ToDos'>
+                  <AssignmentTurnedInIcon style={{ color: "#fff" }} />
+                </NavLink>
               </Badge>
             </IconButton>
+
             <IconButton aria-label="show 17 new notifications" color="inherit">
-              <Badge badgeContent={17} color="secondary">
-                <NotificationsIcon />
-              </Badge>
+              <NavLink to='/Home/AboutUs' style={{ color: "#fff" }}>
+                <InfoIcon />
+              </NavLink>
             </IconButton>
+
             <IconButton
               edge="end"
               aria-label="account of current user"
@@ -221,6 +249,18 @@ function CAppBar() {
               color="inherit"
             >
               <AccountCircle />
+            </IconButton>
+
+            <IconButton
+              edge="end"
+              aria-label="account of current user"
+              aria-controls={menuId}
+              aria-haspopup="true"
+              onClick={handleLogOutClick}
+              color="inherit"
+              style={{ margin: '2px' }}
+            >
+              <ExitToAppIcon style={{ color: '#fff' }} />
             </IconButton>
           </div>
           <div className={classes.sectionMobile}>
@@ -241,9 +281,6 @@ function CAppBar() {
     </div>
   );
 }
-
-
-
 
 function ElevationScroll(props) {
   const { children, window } = props;

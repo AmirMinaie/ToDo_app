@@ -14,14 +14,13 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import CircularProgressWithLabel from './Progres';
 import { borders } from '@material-ui/system';
 import { withStyles } from '@material-ui/styles';
 import { connect } from 'react-redux'
 import DeleteIcon from '@material-ui/icons/Delete'
-import { Delete_ToDo } from './../Redux/actions'
-import Dialog from './Dialog'
-
+import { ShowNotify, Loding_data, Delete_ToDo, notify_Type, To_do_Parent } from '../../../../Redux/actions'
+import { AlertDialog, CuProgres } from '../../../Utils'
+import axios from 'axios'
 
 
 function Row(props) {
@@ -36,11 +35,13 @@ function Row(props) {
   return (
     <React.Fragment>
       <TableRow className={classes.tableRowSecend}>
-        <TableCell align="left">{row.title}</TableCell>
-        <TableCell align="left">{row.dateCreate}</TableCell>
-        <TableCell component="th" scope="row">{row.id}</TableCell>
+        <TableCell align="left">{row.data.title}</TableCell>
+        <TableCell align="left">{row.data.dateCreate}</TableCell>
+        <TableCell component="th" scope="row">
+          {/*todo {sum()} */}
+        </TableCell>
         <TableCell align="center">
-          <CircularProgressWithLabel value={row.persnge} size={35} color='inherit' />
+          <CuProgres value={row.persnge} size={35} color='inherit' />
         </TableCell>
         <TableCell size="small" align='right'><IconButton onClick={() => { onClickDelete(row.id) }}><DeleteIcon /></IconButton></TableCell>
 
@@ -67,7 +68,7 @@ function Row(props) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {(row.childeData != undefined && row.childeData.length > 0) ? row.childeData.map((historyRow) => (
+                  {(row.childeData !== undefined && row.childeData.length > 0) ? row.childeData.map((historyRow) => (
                     <TableRow key={historyRow.id}>
                       <TableCell component="th" scope="row">
                         {historyRow.title}
@@ -87,11 +88,27 @@ function Row(props) {
   );
 }
 
-class CollapsibleTable extends Component {
+class CuTable extends Component {
 
   state = {
     openDialogConferm: false,
   }
+
+  componentDidMount() {
+    axios.get('todo.json')
+      .then((res) => {
+        console.log(res.data)
+        var data = Object.entries(res.data)
+          .map(([key, value]) => { return { id: key, data: value } });
+        this.props.dispatch(Loding_data(data))
+        console.log(data);
+      })
+      .catch((error) => {
+        console.log(error);
+        this.props.dispatch(ShowNotify(notify_Type.Error, "خطا در برقراری ارتباط با سرور"));
+      });
+  }
+
   DeleteRowId = -1;
 
   DeleteRow = (id) => {
@@ -102,7 +119,7 @@ class CollapsibleTable extends Component {
   rezalteDialog = (rezalte) => {
     switch (rezalte) {
       case "Agree":
-        console.log("props Table",this.props)
+        console.log("props Table", this.props)
         this.props.dispatch(Delete_ToDo(this.DeleteRowId))
         this.DeleteRowId = -1;
         this.setState(() => {
@@ -144,7 +161,7 @@ class CollapsibleTable extends Component {
             </colgroup>
             <TableHead className={classes.headFrist}>
               <TableRow className={classes.tableRowFrist}>
-                <TableCell align="left" hideSortIcon='true' >عنوان</TableCell>
+                <TableCell align="left" >عنوان</TableCell>
                 <TableCell align="left">تاریخ ایجاد</TableCell>
                 <TableCell align="left">مدت زمان</TableCell>
                 <TableCell align="center"></TableCell>
@@ -157,7 +174,7 @@ class CollapsibleTable extends Component {
             </TableBody>
           </Table>
         </TableContainer>
-        <Dialog open={this.state.openDialogConferm} dialogRezalte={this.rezalteDialog.bind(this)} />
+        <AlertDialog open={this.state.openDialogConferm} dialogRezalte={this.rezalteDialog.bind(this)} />
       </>
     );
   }
@@ -195,4 +212,4 @@ const statmaptoprps = state => {
   }
 }
 
-export default connect(statmaptoprps)(withStyles(style)(CollapsibleTable));
+export default connect(statmaptoprps)(withStyles(style)(CuTable));

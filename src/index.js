@@ -1,23 +1,25 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './Component/App';
+import App from './Component/App/index';
 import reportWebVitals from './reportWebVitals';
 import './index.css';
 import { Provider } from "react-redux";
-import { createStore,applyMiddleware } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 import reducers from './Redux/reduser'
 import { composeWithDevTools } from 'redux-devtools-extension';
+import {BrowserRouter} from 'react-router-dom'
 
 
 
-
-const store =createStore(reducers,composeWithDevTools(applyMiddleware()));
+const store = createStore(reducers, composeWithDevTools(applyMiddleware()));
 
 
 ReactDOM.render(
-  <Provider store ={store} >
+  <Provider store={store} >
     <React.StrictMode className='defalteFont'>
-      <App />
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
     </React.StrictMode>
   </Provider>,
   document.getElementById('root')

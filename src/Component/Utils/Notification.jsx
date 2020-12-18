@@ -1,6 +1,9 @@
 import React from 'react'
 import { Snackbar, makeStyles } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
+import { connect } from 'react-redux';
+import { HidenNotify } from '../../Redux/actions';
+
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -8,34 +11,37 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export default function Notification(props) {
-    console.log('[Notification]',props)
-    const { notify, setNotify } = props;
+function Notification(props) {
+    const notify = props.notify
     const classes = useStyles()
 
     const handleClose = (event, reason) => {
-        console.log(reason)
-        if (reason === 'clickaway') {
-            return;
-        }
-        setNotify({
-            ...notify,
-            isOpen: false
-        })
+     props.dispatch(HidenNotify())
     }
 
     return (
         <Snackbar
             className={classes.root}
             open={notify.isOpen}
-            autoHideDuration={3000}
+            autoHideDuration={300}
             anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-            onClose={handleClose}>
+            >
             <Alert
-                severity={notify.type}
-                onClose={handleClose}>
+                severity={notify.severity}
+                onClose={handleClose}
+                style={{ fontSize: '18px' }}
+            >
                 {notify.message}
             </Alert>
         </Snackbar>
     )
 }
+
+const mapStateToProps = (state) => {
+    return {
+        notify: state.infoNotify
+    }
+}
+
+
+export default connect(mapStateToProps)(Notification)

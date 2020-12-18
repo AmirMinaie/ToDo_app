@@ -2,9 +2,9 @@ import React from "react";
 import { withStyles } from '@material-ui/styles';
 import Paper from "@material-ui/core/Paper";
 import PropTypes from 'prop-types';
-import ScrollableTabsButtonPrevent from './ScrollableTabsButtonPrevent';
-import Forms from "./Forms";
-import Notification from './Notifcation';
+import CuTabs from './Tab/CuTabs';
+import FormTodo from "./FormTodo";
+import {Notification} from '../../Utils';
 import { connect } from 'react-redux';
 
 const useStyles = theme => ({
@@ -13,7 +13,6 @@ const useStyles = theme => ({
         flexWrap: "wrap",
         width: '100%',
         zIndex: '10',
-        // pading
         margin: '20px'
     },
     div: {
@@ -40,7 +39,7 @@ const useStyles = theme => ({
     }
 });
 
-class MainForm extends React.Component {
+class ToDos extends React.Component {
 
     state = {
         rowData: [],
@@ -59,10 +58,10 @@ class MainForm extends React.Component {
             <>
                 <div className={classes.div}>
                     <Paper elevation={5} className={classes.root} >
-                        <Forms submitAddRow={this.submitAddRow.bind(this)} />
+                        <FormTodo submitAddRow={this.submitAddRow.bind(this)} />
                     </Paper>
                     <Paper elevation={5} className={classes.root} >
-                        <ScrollableTabsButtonPrevent />
+                        <CuTabs/>
                     </Paper>
                 </div>
                 <Notification notify={this.state.notify} setNotify={(Notify) => {
@@ -75,7 +74,7 @@ class MainForm extends React.Component {
     }
 }
 
-MainForm.propTypes = { classes: PropTypes.object.isRequired, };
+ToDos.propTypes = { classes: PropTypes.object.isRequired, };
 
 const mapStateToPrprs = state =>{
     return{
@@ -84,4 +83,4 @@ const mapStateToPrprs = state =>{
 }
 
 
-export default connect(mapStateToPrprs)(withStyles(useStyles)(MainForm))
+export default connect(mapStateToPrprs)(withStyles(useStyles)(ToDos))

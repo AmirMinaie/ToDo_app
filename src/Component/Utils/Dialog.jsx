@@ -3,17 +3,16 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-export default function AlertDialog(props) {
+function AlertDialog(props) {
 
     const [open, setOpen] = React.useState(false);
     const rezalteDialog = props.dialogRezalte
 
     useEffect(() => {
-        console.log("update open", props.open != undefined ? props.open : false);
-        setOpen(props.open != undefined ? props.open : false)
+        console.log("update open", props.open !== undefined ? props.open : false);
+        setOpen(props.open !== undefined ? props.open : false)
     }, [props.open])
 
     const handle = (rezalte) => {
@@ -46,3 +45,4 @@ export default function AlertDialog(props) {
         </Dialog>
     );
 }
+export default AlertDialog
